@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quantum Echoes, exposicion</title>
+<title>Quantum Echoes, exposición</title>
 <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -219,11 +219,11 @@ body.laser-on .laser-canvas { display: block; }
     <div class="titlecard">
       <div class="kicker">Plataformero 2D con bucle temporal</div>
       <h1>Quantum Echoes</h1>
-      <p class="big muted">Escapar de la Fractura Cuantica cooperando con grabaciones de uno mismo.</p>
+      <p class="big muted">Escapar de la Fractura Cuántica cooperando con grabaciones de uno mismo.</p>
       <a class="demo-link" href="https://tebansus.itch.io/quantum-echoes" target="_blank" rel="noopener">Demo jugable en el navegador: tebansus.itch.io/quantum-echoes</a>
       <div class="foot">
-        Universidad de Costa Rica &nbsp;|&nbsp; PF-1900 Creacion de Videojuegos &nbsp;|&nbsp; Unity 6.3.11f1<br>
-        Esteban Alfaro &nbsp;&middot;&nbsp; David Martinez &nbsp;&middot;&nbsp; Antonio Badilla
+        Universidad de Costa Rica &nbsp;|&nbsp; PF-1900 Creación de Videojuegos &nbsp;|&nbsp; Unity 6.3.11f1<br>
+        Esteban Alfaro &nbsp;&middot;&nbsp; David Martínez &nbsp;&middot;&nbsp; Antonio Badilla
       </div>
     </div>
   </section>
@@ -231,13 +231,13 @@ body.laser-on .laser-canvas { display: block; }
   <!-- AGENDA -->
   <section class="slide">
     <span class="lead" data-by="Antonio">Agenda</span>
-    <h2>Que vamos a ver</h2>
+    <h2>¿Qué vamos a ver?</h2>
     <div class="cols">
       <ol class="agenda">
         <li><strong>Concepto</strong> y alcance del demo</li>
-        <li><strong>Arquitectura:</strong> como se construyo</li>
+        <li><strong>Arquitectura:</strong> como se construyó</li>
         <li><strong>Un nivel completo:</strong> N1 El Eco</li>
-        <li><strong>Mecanicas</strong> del jugador</li>
+        <li><strong>Mecánicas</strong> del jugador</li>
       </ol>
       <ol class="agenda" start="5">
         <li><strong>Enemigos</strong> y su algoritmo</li>
@@ -251,11 +251,11 @@ body.laser-on .laser-canvas { display: block; }
   <!-- 2 QUE ES -->
   <section class="slide">
     <span class="lead" data-by="Antonio">Concepto</span><span class="tag">1 / 7</span>
-    <h2>La idea en una linea</h2>
-    <p class="big">Un plataformero de precision donde cada intento queda grabado, y tu yo del pasado vuelve como fantasma para resolver lo que una sola persona no puede.</p>
-    <h3>El pilar de diseno</h3>
-    <p>Lo llamamos <strong>"ajedrez temporal"</strong>: cada run es una jugada estrategica. Decides que hacer, que guardar y que grabar, sabiendo que tu yo futuro va a aprovechar esas decisiones.</p>
-    <div class="note">Referencias: Metroidvania (Hollow Knight), feel de precision (Celeste), eco temporal (Super Time Force), bucle (Majora's Mask).</div>
+    <h2>La idea en una línea</h2>
+    <p class="big">Un plataformero de precisión donde cada intento queda grabado, y tu yo del pasado vuelve como fantasma para resolver lo que una sola persona no puede.</p>
+    <h3>El pilar de diseño</h3>
+    <p>Lo llamamos <strong>"ajedrez temporal"</strong>: cada run es una jugada estratégica. Decides qué hacer, qué guardar y qué grabar, sabiendo que tu yo futuro va a aprovechar esas decisiones.</p>
+    <div class="note">Referencias: Metroidvania (Hollow Knight), feel de precisión (Celeste), eco temporal (Super Time Force), bucle (Majora's Mask).</div>
   </section>
 
   <!-- 3 BUCLE -->
@@ -266,14 +266,14 @@ body.laser-on .laser-canvas { display: block; }
       <div>
         <ul>
           <li>Cada nivel tiene un <strong>temporizador</strong>. Cuando se acaba, el run termina.</li>
-          <li>El run tambien termina al perder los 3 corazones o de forma voluntaria.</li>
+          <li>El run también termina al perder los 3 corazones o de forma voluntaria.</li>
           <li>Al terminar, decides si <strong>grabar</strong> ese run como tu nuevo fantasma.</li>
           <li>Nuevo run: el mundo se reinicia, los enemigos vuelven frescos, pero la <strong>caja temporal</strong> persiste y el fantasma reproduce el run grabado.</li>
         </ul>
       </div>
       <div class="card">
         <h4>Core loop</h4>
-        <p>Empieza run, el fantasma reproduce su grabacion, navegas, recoges e interactuas, guardas en la caja temporal, el run termina, grabas o no, y repites hasta completar el nivel.</p>
+        <p>Empieza run, el fantasma reproduce su grabación, navegas, recoges e interactúas, guardas en la caja temporal, el run termina, grabas o no, y repites hasta completar el nivel.</p>
       </div>
     </div>
   </section>
@@ -292,19 +292,19 @@ body.laser-on .laser-canvas { display: block; }
         <p>Niveles 4 a 6. <span class="pill road">Roadmap</span><br><br>Double Jump, Time Freeze, Pocket, jefe Sheriff.</p>
       </div>
       <div class="card">
-        <h4>Zona C: Brecha Cibernetica</h4>
+        <h4>Zona C: Brecha Cibernética</h4>
         <p>Niveles 7 a 9. <span class="pill road">Roadmap</span><br><br>Grapple Hook, lasers, jefe final Super Ghost.</p>
       </div>
     </div>
-    <div class="note">Honestidad de alcance: hoy mostramos la Zona A con stub art. El resto es diseno documentado en el GDD, no codigo terminado.</div>
+    <div class="note">Honestidad de alcance: hoy mostramos la Zona A con stub art. El resto es diseño documentado en el GDD, no código terminado.</div>
   </section>
 
   <!-- 5 SECCION ARQUITECTURA -->
   <section class="slide">
     <div class="section-divider">
       <div class="num">02</div>
-      <h1 style="text-align:left">Como se construyo</h1>
-      <p class="muted big">Arquitectura por composicion.</p>
+      <h1 style="text-align:left">Cómo se construyó</h1>
+      <p class="muted big">Arquitectura por composición.</p>
     </div>
   </section>
 
@@ -313,12 +313,12 @@ body.laser-on .laser-canvas { display: block; }
     <span class="lead" data-by="Antonio">Arquitectura</span><span class="tag">2 / 7</span>
     <h2>El stack y las decisiones de base</h2>
     <div class="cols-3">
-      <div class="card"><h4>Unity 6.3.11f1</h4><p>Motor 2D, fisica Rigidbody2D, Tilemaps.</p></div>
+      <div class="card"><h4>Unity 6.3.11f1</h4><p>Motor 2D, física Rigidbody2D, Tilemaps.</p></div>
       <div class="card"><h4>New Input System</h4><p>Handlers por callback, sin polling. El input emite eventos, los componentes se suscriben.</p></div>
-      <div class="card"><h4>GameManager</h4><p>Coordinador central. Singleton que orquesta el ciclo de run y guarda la grabacion.</p></div>
+      <div class="card"><h4>GameManager</h4><p>Coordinador central. Singleton que orquesta el ciclo de run y guarda la grabación.</p></div>
     </div>
-    <h3>No hay un PlayerController monolitico</h3>
-    <p>El jugador es un prefab compuesto de varios MonoBehaviour, cada uno con una sola responsabilidad. Anadir una habilidad es siempre la misma operacion: un componente que se cuelga del prefab.</p>
+    <h3>No hay un PlayerController monolítico</h3>
+    <p>El jugador es un prefab compuesto de varios MonoBehaviour, cada uno con una sola responsabilidad. Añadir una habilidad es siempre la misma operación: un componente que se cuelga del prefab.</p>
   </section>
 
   <!-- 7 COMPOSICION -->
@@ -326,15 +326,15 @@ body.laser-on .laser-canvas { display: block; }
     <span class="lead" data-by="Antonio">Arquitectura</span><span class="tag">2 / 7</span>
     <h2>Tres roles: Source, Writer, Observer</h2>
     <div class="cols-3">
-      <div class="card"><h4><span class="pill src">Source</span></h4><p>Produce informacion, no cambia el mundo.<br><br>PlayerInputSource, GroundCheck</p></div>
+      <div class="card"><h4><span class="pill src">Source</span></h4><p>Produce información, no cambia el mundo.<br><br>PlayerInputSource, GroundCheck</p></div>
       <div class="card"><h4><span class="pill wri">Writer</span></h4><p>Cambia el estado del mundo (Rigidbody, eventos).<br><br>HorizontalMovement (eje x), JumpAbility (eje y)</p></div>
       <div class="card"><h4><span class="pill obs">Observer</span></h4><p>Lee y reacciona, no cambia estado.<br><br>Loggers, audio, VFX</p></div>
     </div>
     <h3>Reglas que evitan dolor</h3>
     <ul>
-      <li><strong>Un Writer por eje y por tick.</strong> Si dos quieren el mismo eje, se decide quien manda por gating.</li>
+      <li><strong>Un Writer por eje y por tick.</strong> Si dos quieren el mismo eje, se decide quién manda por gating.</li>
       <li><strong>Suscribir en OnEnable, desuscribir en OnDisable.</strong> Espejo exacto, sin handlers fantasma.</li>
-      <li><strong>Logica de algoritmo en helpers puros de C#</strong> (sin Unity), probados en EditMode.</li>
+      <li><strong>Lógica de algoritmo en helpers puros de C#</strong> (sin Unity), probados en EditMode.</li>
     </ul>
   </section>
 
@@ -353,18 +353,18 @@ body.laser-on .laser-canvas { display: block; }
     <h2>Nivel 1: El Eco</h2>
     <div class="cols">
       <div>
-        <p>El nivel tutorial. El jugador despierta en una camara de piedra medieval. El objetivo: llegar a la salida, detras de una puerta en una plataforma elevada a la derecha.</p>
-        <h3>Que ensena</h3>
+        <p>El nivel tutorial. El jugador despierta en una cámara de piedra medieval. El objetivo: llegar a la salida, detrás de una puerta en una plataforma elevada a la derecha.</p>
+        <h3>Qué enseña</h3>
         <ul>
-          <li>Desplazamiento basico: caminar y saltar.</li>
-          <li>La placa de presion que abre una puerta.</li>
-          <li>El trigger de salida que termina el run con exito.</li>
+          <li>Desplazamiento básico: caminar y saltar.</li>
+          <li>La placa de presión que abre una puerta.</li>
+          <li>El trigger de salida que termina el run con éxito.</li>
           <li>Prompts de tutorial contextuales.</li>
         </ul>
       </div>
       <div class="card">
-        <h4>Por que N1 para la demo</h4>
-        <p>Es el nivel mas completo de extremo a extremo: piso, props, placa + puerta, salida y tutorial estan integrados y jugables.</p>
+        <h4>Por qué N1 para la demo</h4>
+        <p>Es el nivel más completo de extremo a extremo: piso, props, placa + puerta, salida y tutorial están integrados y jugables.</p>
       </div>
     </div>
   </section>
@@ -376,7 +376,7 @@ body.laser-on .laser-canvas { display: block; }
     <div class="media" data-media="n1-recorrido.mp4" data-kind="video">
       <div class="ico">[ VIDEO ]</div>
       <div class="what">Guardar n1-recorrido.mp4 en esta carpeta</div>
-      <div class="hint">Recorrido completo de N1 (spawn, placa, puerta, ascenso, salida). 60 a 90 segundos. Aparece aqui al guardar el archivo y refrescar.</div>
+      <div class="hint">Recorrido completo de N1 (spawn, placa, puerta, ascenso, salida). 60 a 90 segundos. Aparece aquí al guardar el archivo y refrescar.</div>
     </div>
   </section>
 
@@ -384,8 +384,8 @@ body.laser-on .laser-canvas { display: block; }
   <section class="slide">
     <div class="section-divider">
       <div class="num">04</div>
-      <h1 style="text-align:left">Mecanicas del jugador</h1>
-      <p class="muted big">Movimiento, salto, y la mas compleja.</p>
+      <h1 style="text-align:left">Mecánicas del jugador</h1>
+      <p class="muted big">Movimiento, salto, y la más compleja.</p>
     </div>
   </section>
 
@@ -394,12 +394,12 @@ body.laser-on .laser-canvas { display: block; }
     <span class="lead" data-by="David y Antonio">Jugador</span><span class="tag">4 / 7</span>
     <h2>Habilidades del jugador</h2>
     <table class="t">
-      <tr><th>Habilidad</th><th>Que hace</th><th>Estado</th></tr>
+      <tr><th>Habilidad</th><th>Qué hace</th><th>Estado</th></tr>
       <tr><td>Caminar / Saltar</td><td>Movimiento base con feel ajustado</td><td><span class="pill demo">En demo</span></td></tr>
       <tr><td>Atacar</td><td>Golpe de espada (windup, activo, recovery)</td><td><span class="pill demo">En demo</span></td></tr>
-      <tr><td>Dash</td><td>Desplazamiento rapido, 1 vez por airtime</td><td><span class="pill demo">En demo</span></td></tr>
+      <tr><td>Dash</td><td>Desplazamiento rápido, 1 vez por airtime</td><td><span class="pill demo">En demo</span></td></tr>
       <tr><td>Wall Grip</td><td>Agarre a pared 1s + wall jump</td><td><span class="pill demo">En demo</span></td></tr>
-      <tr><td>Reencarnacion</td><td>Swap de posicion con el fantasma</td><td><span class="pill demo">En demo</span></td></tr>
+      <tr><td>Reencarnación</td><td>Swap de posición con el fantasma</td><td><span class="pill demo">En demo</span></td></tr>
       <tr><td>Double Jump / Time Freeze / Pocket / Grapple</td><td>Habilidades de Zonas B y C</td><td><span class="pill road">Roadmap</span></td></tr>
     </table>
   </section>
@@ -407,15 +407,15 @@ body.laser-on .laser-canvas { display: block; }
   <!-- 14 GAME FEEL -->
   <section class="slide">
     <span class="lead" data-by="David y Antonio">Jugador</span><span class="tag">4 / 7</span>
-    <h2>Game feel: los tres clasicos del salto</h2>
+    <h2>Game feel: los tres clásicos del salto</h2>
     <div class="cols">
       <div>
         <h3>Coyote time</h3>
-        <p class="muted">Permite saltar un instante despues de salir de la plataforma. Perdona el frame perdido.</p>
+        <p class="muted">Permite saltar un instante después de salir de la plataforma. Perdona el frame perdido.</p>
         <h3>Jump buffer</h3>
         <p class="muted">Si presionas salto justo antes de aterrizar, se guarda y salta al tocar el suelo.</p>
         <h3>Salto variable</h3>
-        <p class="muted">Mantener el boton sostiene la altura un poco mas. Tap corto, hold largo.</p>
+        <p class="muted">Mantener el botón sostiene la altura un poco más. Tap corto, hold largo.</p>
       </div>
       <div>
         <pre class="code"><span class="c">// helper puro de C#, sin Unity, probado en EditMode</span>
@@ -424,7 +424,7 @@ body.laser-on .laser-canvas { display: block; }
     <span class="k">public void</span> Tick(<span class="k">float</span> dt) { remaining -= dt; }
     <span class="k">public bool</span> CanJump =&gt; remaining &gt; <span class="l">0f</span>;
 }</pre>
-        <div class="note">Reciben <code>dt</code> por parametro, asi no dependen de <code>Time.fixedDeltaTime</code> y se prueban mucho mas rapido.</div>
+        <div class="note">Reciben <code>dt</code> por parámetro, así no dependen de <code>Time.fixedDeltaTime</code> y se prueban mucho más rápido.</div>
       </div>
     </div>
   </section>
@@ -432,18 +432,18 @@ body.laser-on .laser-canvas { display: block; }
   <!-- 15 WALL GRIP -->
   <section class="slide">
     <span class="lead" data-by="David y Antonio">Jugador</span><span class="tag">4 / 7</span>
-    <h2>Wall Grip: la mas compleja del jugador</h2>
+    <h2>Wall Grip: la más compleja del jugador</h2>
     <div class="cols">
       <div>
         <ul>
-          <li>Se agarra si estas en el aire, hay pared al lado, y empujas <strong>hacia</strong> la pared (deteccion por OverlapBox).</li>
+          <li>Se agarra si estás en el aire, hay pared al lado, y empujas <strong>hacia</strong> la pared (detección por OverlapBox).</li>
           <li>Sostiene 1 segundo, o sueltas antes empujando al lado contrario.</li>
           <li>Salto durante el agarre dispara el <strong>wall jump</strong>: impulso hacia afuera y arriba.</li>
-          <li>El wall jump resetea el uso, asi se encadenan saltos entre paredes.</li>
+          <li>El wall jump resetea el uso, así se encadenan saltos entre paredes.</li>
         </ul>
       </div>
       <div>
-        <div class="note">La sutileza: tras el wall jump hay un <strong>lockout de input de ~150ms</strong>. Sin el, HorizontalMovement corrige el impulso al instante y el arco se siente plano.</div>
+        <div class="note">La sutileza: tras el wall jump hay un <strong>lockout de input de ~150ms</strong>. Sin él, HorizontalMovement corrige el impulso al instante y el arco se siente plano.</div>
         <pre class="code"><span class="k">if</span> (dash.IsDashing) <span class="k">return</span>;
 <span class="k">if</span> (wallGrip.IsGripping) <span class="k">return</span>;
 <span class="k">if</span> (wallGrip.IsInWallJumpLock) <span class="k">return</span>;
@@ -457,7 +457,7 @@ body.laser-on .laser-canvas { display: block; }
     <div class="section-divider">
       <div class="num">05</div>
       <h1 style="text-align:left">Enemigos y su algoritmo</h1>
-      <p class="muted big">Una maquina de estados finita.</p>
+      <p class="muted big">Una máquina de estados finita.</p>
     </div>
   </section>
 
@@ -465,7 +465,7 @@ body.laser-on .laser-canvas { display: block; }
   <section class="slide">
     <span class="lead" data-by="Antonio">Enemigos</span><span class="tag">5 / 7</span>
     <h2>El algoritmo: una FSM, no pathfinding</h2>
-    <p>Cada enemigo es una <strong>maquina de estados finita</strong>. En cada frame, segun el estado actual, se ejecuta el tick correspondiente.</p>
+    <p>Cada enemigo es una <strong>máquina de estados finita</strong>. En cada frame, según el estado actual, se ejecuta el tick correspondiente.</p>
     <div class="fsm">
       <div class="node start">Patrol</div><span class="arrow">&rarr;</span>
       <div class="node act">Alert</div><span class="arrow">&rarr;</span>
@@ -485,21 +485,21 @@ body.laser-on .laser-canvas { display: block; }
   <!-- 18 DETECCION -->
   <section class="slide">
     <span class="lead" data-by="Antonio">Enemigos</span><span class="tag">5 / 7</span>
-    <h2>Deteccion y dano</h2>
+    <h2>Detección y daño</h2>
     <div class="cols">
       <div>
-        <h3>Deteccion por rango</h3>
+        <h3>Detección por rango</h3>
         <ul>
-          <li><code>detectionRange</code>: dentro de el, Patrol pasa a Alert y luego Chase.</li>
-          <li><code>attackRange</code>: dentro de el, Chase pasa a Attack.</li>
-          <li>Calculo simple de distancia al objetivo cada frame.</li>
+          <li><code>detectionRange</code>: dentro de él, Patrol pasa a Alert y luego Chase.</li>
+          <li><code>attackRange</code>: dentro de él, Chase pasa a Attack.</li>
+          <li>Cálculo simple de distancia al objetivo cada frame.</li>
         </ul>
       </div>
       <div>
-        <h3>Pipeline de dano</h3>
+        <h3>Pipeline de daño</h3>
         <ul>
-          <li><code>IDamageable</code>: interfaz comun para todo lo que recibe golpes.</li>
-          <li>Al recibir dano: resta vida, entra a Hit (stun), aplica knockback direccional.</li>
+          <li><code>IDamageable</code>: interfaz común para todo lo que recibe golpes.</li>
+          <li>Al recibir daño: resta vida, entra a Hit (stun), aplica knockback direccional.</li>
           <li>A 0 de vida: pasa a Dead.</li>
         </ul>
       </div>
@@ -513,10 +513,10 @@ body.laser-on .laser-canvas { display: block; }
     <h2>El Caballero Oscuro: escudo direccional</h2>
     <div class="cols">
       <div>
-        <p>Hereda de la misma base (<code>BossBase : EnemyBase</code>) pero anade dos mecanicas:</p>
+        <p>Hereda de la misma base (<code>BossBase : EnemyBase</code>) pero añade dos mecánicas:</p>
         <ul>
-          <li><strong>Escudo frontal:</strong> bloquea ataques del lado que el jefe encara. El facing se calcula <strong>en vivo</strong>, asi sobrevive a teleports.</li>
-          <li><strong>Dano por contacto:</strong> tocar el cuerpo cuesta vida (estilo Hollow Knight).</li>
+          <li><strong>Escudo frontal:</strong> bloquea ataques del lado que el jefe encara. El facing se calcula <strong>en vivo</strong>, así sobrevive a teleports.</li>
+          <li><strong>Daño por contacto:</strong> tocar el cuerpo cuesta vida (estilo Hollow Knight).</li>
         </ul>
         <pre class="code"><span class="k">bool</span> ShouldBlockDamage(<span class="s">Vector2</span> src) {
     <span class="k">float</span> dx = src.x - position.x;
@@ -525,7 +525,7 @@ body.laser-on .laser-canvas { display: block; }
       </div>
       <div class="card">
         <h4>La estrategia invertida</h4>
-        <p>No le puedes pegar de frente. La solucion: tu haces de cebo manteniendote al frente, mientras tu <strong>fantasma lo golpea por la espalda</strong>. El jefe ignora al fantasma.<br><br>Aqui el eco deja de ser una herramienta de puzzle y se vuelve una de combate.</p>
+        <p>No le puedes pegar de frente. La solución: tú haces de cebo manteniéndote al frente, mientras tu <strong>fantasma lo golpea por la espalda</strong>. El jefe ignora al fantasma.<br><br>Aquí el eco deja de ser una herramienta de puzzle y se vuelve una de combate.</p>
       </div>
     </div>
   </section>
@@ -535,27 +535,27 @@ body.laser-on .laser-canvas { display: block; }
     <div class="section-divider">
       <div class="num">06</div>
       <h1 style="text-align:left">El sistema de Eco</h1>
-      <p class="muted big">La mecanica mas compleja, a fondo.</p>
+      <p class="muted big">La mecánica más compleja, a fondo.</p>
     </div>
   </section>
 
   <!-- 21 ECO QUE ES -->
   <section class="slide">
     <span class="lead" data-by="Esteban">Deep dive: Eco</span><span class="tag">6 / 7</span>
-    <h2>El corazon del juego</h2>
-    <p class="quote">"En el siguiente run, un fantasma replica esa grabacion exacta."</p>
+    <h2>El corazón del juego</h2>
+    <p class="quote">"En el siguiente run, un fantasma replica esa grabación exacta."</p>
     <p>El jugador graba un run. En el siguiente, un fantasma reproduce ese run: movimiento, interacciones con el mundo y ataques. Sus interacciones afectan el mundo en tiempo real.</p>
     <ul>
-      <li>Maximo un fantasma activo a la vez.</li>
+      <li>Máximo un fantasma activo a la vez.</li>
       <li>El fantasma es invulnerable.</li>
-      <li>Sus ataques impactan enemigos solo si coinciden en posicion y tiempo.</li>
+      <li>Sus ataques impactan enemigos solo si coinciden en posición y tiempo.</li>
     </ul>
   </section>
 
   <!-- 22 GRABACION -->
   <section class="slide">
     <span class="lead" data-by="Esteban">Deep dive: Eco</span><span class="tag">6 / 7</span>
-    <h2>Paso 1: grabacion</h2>
+    <h2>Paso 1: grabación</h2>
     <div class="cols">
       <div>
         <p>Cada <code>FixedUpdate</code>, el <code>PlayerRecorder</code> guarda un <strong>snapshot</strong> del estado del jugador.</p>
@@ -564,14 +564,14 @@ body.laser-on .laser-canvas { display: block; }
     moveInput, jumpHeld,
     jumpStarted, attackStarted,
 };</pre>
-        <div class="note">Por que <code>FixedUpdate</code>: ahi corre la fisica. Grabar al mismo ritmo garantiza que el fantasma se reproduzca igual en cualquier maquina.</div>
+        <div class="note">Por qué <code>FixedUpdate</code>: ahí corre la física. Grabar al mismo ritmo garantiza que el fantasma se reproduzca igual en cualquier máquina.</div>
       </div>
       <div>
-        <h3>El detalle dificil</h3>
-        <p>Los eventos de <strong>un solo frame</strong> (un ataque, un salto) se marcan y se limpian cada tick. Tienen que sobrevivir el viaje completo: evento, captura en el snapshot, almacenamiento, reproduccion, y dispararse <strong>exactamente una vez</strong>.</p>
+        <h3>El detalle difícil</h3>
+        <p>Los eventos de <strong>un solo frame</strong> (un ataque, un salto) se marcan y se limpian cada tick. Tienen que sobrevivir el viaje completo: evento, captura en el snapshot, almacenamiento, reproducción, y dispararse <strong>exactamente una vez</strong>.</p>
         <pre class="code"><span class="k">void</span> NotifyAttackStarted() =&gt;
     attackStartedThisFrame = <span class="l">true</span>;
-<span class="c">// se captura en el proximo snapshot</span></pre>
+<span class="c">// se captura en el próximo snapshot</span></pre>
       </div>
     </div>
   </section>
@@ -579,10 +579,10 @@ body.laser-on .laser-canvas { display: block; }
   <!-- 23 PLAYBACK -->
   <section class="slide">
     <span class="lead" data-by="Esteban">Deep dive: Eco</span><span class="tag">6 / 7</span>
-    <h2>Paso 2: reproduccion</h2>
+    <h2>Paso 2: reproducción</h2>
     <div class="cols">
       <div>
-        <p>El fantasma usa un Rigidbody2D <strong>Kinematic</strong>: no simula fisica, escribe la posicion y velocidad grabadas directamente.</p>
+        <p>El fantasma usa un Rigidbody2D <strong>Kinematic</strong>: no simula física, escribe la posición y velocidad grabadas directamente.</p>
         <pre class="code"><span class="s">PlayerSnapshot</span> snap = buffer[frameIndex];
 body.position = snap.position;
 body.linearVelocity = snap.velocity;
@@ -591,7 +591,7 @@ body.linearVelocity = snap.velocity;
 frameIndex++;</pre>
       </div>
       <div>
-        <div class="note"><strong>Punto fino para preguntas:</strong> no re-simulamos los inputs, reproducimos el <strong>estado grabado</strong>. Asi esquivamos cualquier divergencia de fisica entre maquinas o runs. Es replay de estado, no re-simulacion.</div>
+        <div class="note"><strong>Punto fino para preguntas:</strong> no re-simulamos los inputs, reproducimos el <strong>estado grabado</strong>. Así esquivamos cualquier divergencia de física entre máquinas o runs. Es replay de estado, no re-simulación.</div>
         <p style="margin-top:14px">Al acabarse el buffer, el fantasma frena y avisa al spawner para destruirse, una sola vez.</p>
       </div>
     </div>
@@ -604,26 +604,26 @@ frameIndex++;</pre>
     <div class="flow">
       <div class="box">Run N<br><span class="muted" style="font-size:1rem">PlayerRecorder graba snapshots</span></div>
       <div class="sep">&rarr;</div>
-      <div class="box">Fin del run<br><span class="muted" style="font-size:1rem">GameManager guarda la grabacion</span></div>
+      <div class="box">Fin del run<br><span class="muted" style="font-size:1rem">GameManager guarda la grabación</span></div>
       <div class="sep">&rarr;</div>
       <div class="box ghost">Run N+1<br><span class="muted" style="font-size:1rem">GhostSpawner instancia y reproduce</span></div>
     </div>
-    <p>El <code>GameManager</code> es el coordinador: emite <code>OnRunStart</code> y <code>OnRunEnd</code>, guarda el arreglo de snapshots del run que termino, y en el siguiente run el spawner crea el fantasma con esa grabacion.</p>
+    <p>El <code>GameManager</code> es el coordinador: emite <code>OnRunStart</code> y <code>OnRunEnd</code>, guarda el arreglo de snapshots del run que termino, y en el siguiente run el spawner crea el fantasma con esa grabación.</p>
     <div class="note">Tres piezas, una responsabilidad cada una: el recorder graba, el GameManager guarda, el spawner reproduce.</div>
   </section>
 
   <!-- 25 REINCARNACION -->
   <section class="slide">
     <span class="lead" data-by="Esteban">Deep dive: Eco</span><span class="tag">6 / 7</span>
-    <h2>El giro: reencarnacion y el orden de ejecucion</h2>
+    <h2>El giro: reencarnación y el orden de ejecución</h2>
     <div class="cols">
       <div>
-        <p>La reencarnacion intercambia tu posicion con la del fantasma, y lo consume. En el siguiente run, la grabacion <strong>incluye</strong> ese teletransporte.</p>
+        <p>La reencarnación intercambia tu posición con la del fantasma, y lo consume. En el siguiente run, la grabación <strong>incluye</strong> ese teletransporte.</p>
         <p>Para eso, el swap se hace <strong>dentro del callback del Input</strong>, que corre en <code>Update</code>, no en <code>FixedUpdate</code>.</p>
       </div>
       <div>
-        <div class="note">Si escribieramos la posicion en <code>FixedUpdate</code>, Unity no garantiza el orden entre scripts. Si el recorder corre primero, ese snapshot llevaria la posicion vieja y la grabacion se rompe por un frame. El callback de Input siempre corre antes del proximo FixedUpdate del recorder.</div>
-        <p class="muted" style="margin-top:12px">Es el problema inverso al recorder: una mecanica elige FixedUpdate a proposito, la otra elige Update a proposito, ambas por el orden de ejecucion.</p>
+        <div class="note">Si escribiéramos la posición en <code>FixedUpdate</code>, Unity no garantiza el orden entre scripts. Si el recorder corre primero, ese snapshot llevaría la posición vieja y la grabación se rompe por un frame. El callback de Input siempre corre antes del próximo FixedUpdate del recorder.</div>
+        <p class="muted" style="margin-top:12px">Es el problema inverso al recorder: una mecánica elige FixedUpdate a propósito, la otra elige Update a propósito, ambas por el orden de ejecución.</p>
       </div>
     </div>
   </section>
@@ -631,14 +631,14 @@ frameIndex++;</pre>
   <!-- 26 EL PAGO -->
   <section class="slide">
     <span class="lead" data-by="Esteban">Deep dive: Eco</span><span class="tag">6 / 7</span>
-    <h2>Por que vale la pena: todo se junta</h2>
+    <h2>Por qué vale la pena: todo se junta</h2>
     <div class="cols">
       <div>
-        <p>El sistema de eco no es una curiosidad tecnica: es lo que hace posible la pelea del Caballero.</p>
+        <p>El sistema de eco no es una curiosidad técnica: es lo que hace posible la pelea del Caballero.</p>
         <ul>
-          <li>Run 1: grabas un recorrido que ataca donde estara el jefe.</li>
-          <li>Run 2: tu fantasma reproduce esos ataques por la espalda, mientras tu haces de cebo de frente.</li>
-          <li>El escudo frontal mas el dano por contacto fuerzan esa cooperacion.</li>
+          <li>Run 1: grabas un recorrido que ataca donde estará el jefe.</li>
+          <li>Run 2: tu fantasma reproduce esos ataques por la espalda, mientras tú haces de cebo de frente.</li>
+          <li>El escudo frontal más el daño por contacto fuerzan esa cooperación.</li>
         </ul>
       </div>
       <div class="media" data-media="caballero.mp4" data-kind="video"><div class="ico">[ VIDEO ]</div><div class="what">caballero.mp4</div><div class="hint">Jugador de frente como cebo, fantasma golpeando por la espalda.</div></div>
@@ -648,11 +648,11 @@ frameIndex++;</pre>
   <!-- 27 CIERRE -->
   <section class="slide">
     <span class="lead" data-by="Esteban">Cierre</span><span class="tag">7 / 7</span>
-    <h2>Propuesta de valor y que sigue</h2>
+    <h2>Propuesta de valor y qué sigue</h2>
     <div class="cols">
       <div>
         <h3>Propuesta de valor</h3>
-        <p>Plataformas de precision + bucle temporal + eco cooperativo-en-solitario, una interseccion poco explorada. El "ajedrez temporal" da profundidad rejugable; la amalgama historica (16-bit, colision de eras) da identidad visual.</p>
+        <p>Plataformas de precisión + bucle temporal + eco cooperativo-en-solitario, una intersección poco explorada. El "ajedrez temporal" da profundidad rejugable; la amalgama histórica (16-bit, colisión de eras) da identidad visual.</p>
       </div>
       <div>
         <h3>Roadmap honesto</h3>
@@ -663,7 +663,7 @@ frameIndex++;</pre>
         </ul>
       </div>
     </div>
-    <div class="note">Hoy demostramos la Zona A jugable con las mecanicas core: movimiento, combate, enemigos con FSM, jefe con escudo, y el sistema de eco completo.</div>
+    <div class="note">Hoy demostramos la Zona A jugable con las mecánicas core: movimiento, combate, enemigos con FSM, jefe con escudo, y el sistema de eco completo.</div>
     <div style="text-align:center;margin-top:14px">
       <a class="demo-link" href="https://tebansus.itch.io/quantum-echoes" target="_blank" rel="noopener">Jugala vos: tebansus.itch.io/quantum-echoes</a>
     </div>
@@ -694,7 +694,7 @@ frameIndex++;</pre>
   var counter = document.getElementById("counter");
 
   // Escala el canvas fijo (1280x720) para llenar la ventana sin reflujo.
-  // Reacciona a resize y a zoom (visualViewport), asi se ve igual en
+  // Reacciona a resize y a zoom (visualViewport), así se ve igual en
   // cualquier pantalla, proyector o nivel de zoom.
   function fit() {
     var s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
