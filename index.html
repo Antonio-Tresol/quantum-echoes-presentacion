@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quantum Echoes, exposicion</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-main: #0a192f;
+  --slide-bg: #0a192f;
+  --gold: #ffcc00;
+  --gold-2: #ffd700;
+  --text-light: #f0f0f0;
+  --muted: #9fb3c8;
+  --frame-bg: #16213e;
+  --highlight-bg: rgba(255, 204, 0, 0.10);
+  --good: #6ee787;
+  --ghost: #d2a8ff;
+  --bad: #ff7b72;
+  font-family: 'VT323', ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0; height: 100%;
+  background: var(--bg-main); color: var(--text-light);
+  font-family: 'VT323', ui-monospace, monospace;
+  overflow: hidden;
+}
+.deck {
+  height: 100vh; width: 100vw; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* the gold-bordered slide card. Fixed logical canvas (1280x720) scaled to fit
+   the viewport via --scale, so it adapts to any resolution, projector or zoom
+   without reflowing or overflowing. */
+.slide {
+  display: none;
+  width: 1280px;
+  height: 720px;
+  background: var(--slide-bg);
+  border: 5px solid var(--gold);
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.45);
+  padding: 42px 52px;
+  position: relative;
+  overflow: hidden;
+  flex-direction: column;
+  transform: scale(var(--scale, 1));
+  transform-origin: center center;
+  animation: fade 0.25s ease;
+}
+.slide.active { display: flex; }
+/* Only opacity here. Animating transform would override the scale-to-fit
+   transform and make each slide flash at full size before snapping down. */
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* glitch retro en el titulo de portada: estable, con un parpadeo breve por ciclo */
+@keyframes glitchTitle {
+  0%, 89%, 100% { text-shadow: none; transform: none; }
+  90% { text-shadow: -3px 0 #d45a5a, 3px 0 #58c8ff; transform: translateX(2px); }
+  92% { text-shadow: 3px 0 #d45a5a, -3px 0 #58c8ff; transform: translateX(-3px); }
+  94% { text-shadow: -2px 0 #d45a5a, 2px 0 #58c8ff; transform: translateX(1px); }
+  95% { text-shadow: none; transform: none; }
+}
+/* glitch en todos los titulos grandes (portada, divisores de seccion, cierre);
+   los h2 de las slides de contenido no se tocan. */
+h1 { animation: glitchTitle 3.6s linear infinite; will-change: transform; }
+.titlecard, .section-divider { position: relative; }
+.titlecard::after, .section-divider::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(0deg,
+    rgba(255,255,255,0.045) 0px, rgba(255,255,255,0.045) 1px,
+    transparent 1px, transparent 3px);
+}
+
+/* decorative gold corner triangles */
+.slide::before, .slide::after {
+  content: ''; position: absolute; top: 14px; width: 0; height: 0;
+  border-top: 15px solid var(--gold); border-left: 15px solid transparent; z-index: 2;
+}
+.slide::before { left: 14px; transform: rotate(-45deg); }
+.slide::after { right: 14px; transform: rotate(45deg); }
+
+.lead {
+  position: absolute; top: 16px; left: 44px;
+  font-size: 1.05rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold);
+}
+.tag { display: none; }
+.credit {
+  position: absolute; bottom: 14px; left: 52px;
+  font-size: 0.9rem; color: var(--muted); letter-spacing: 0.5px; opacity: 0.65;
+}
+
+h1 { font-size: 5rem; line-height: 1; margin: 0 0 14px; color: var(--gold); text-transform: uppercase; letter-spacing: 4px; }
+h2 { font-size: 2.7rem; margin: 6px 0 18px; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; text-align: center; }
+h3 { font-size: 1.7rem; color: var(--gold-2); margin: 14px 0 6px; text-transform: uppercase; letter-spacing: 1.5px; }
+h4 { font-size: 1.5rem; color: var(--gold); margin: 0 0 6px; letter-spacing: 1px; }
+p { margin: 0 0 12px; font-size: 1.4rem; line-height: 1.45; max-width: 70ch; }
+.big { font-size: 1.9rem; line-height: 1.4; max-width: 34ch; }
+.muted { color: var(--muted); }
+.kicker { color: var(--gold-2); letter-spacing: 3px; text-transform: uppercase; font-size: 1.2rem; margin-bottom: 16px; }
+ul { margin: 6px 0 14px; padding-left: 26px; }
+li { margin: 9px 0; font-size: 1.4rem; line-height: 1.4; }
+ol.agenda { list-style: decimal; padding-left: 36px; }
+ol.agenda li { font-size: 1.55rem; margin: 14px 0; }
+ol.agenda li::marker { color: var(--gold); }
+strong, b { color: var(--gold-2); font-weight: normal; }
+em { color: var(--text-light); font-style: italic; }
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 1.05rem; background: rgba(255,204,0,0.10); color: var(--gold-2);
+  padding: 0 6px; border-radius: 4px;
+}
+
+/* layout helpers */
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start; }
+.cols-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+
+/* navy framed content boxes */
+.card {
+  background: var(--frame-bg); border: 3px solid var(--gold); border-radius: 6px; padding: 16px 20px;
+}
+.card p { font-size: 1.25rem; margin: 0; color: var(--text-light); }
+
+.note {
+  background: var(--highlight-bg); border-left: 5px solid var(--gold);
+  padding: 12px 18px; border-radius: 4px; color: var(--text-light); font-size: 1.25rem; max-width: 74ch;
+}
+.quote { font-size: 2.1rem; line-height: 1.35; color: var(--gold); max-width: 26ch; }
+
+.pill { display: inline-block; font-size: 1rem; padding: 1px 10px; border-radius: 999px; border: 2px solid var(--muted); color: var(--muted); margin-right: 6px; letter-spacing: 1px; }
+.pill.demo { color: var(--good); border-color: var(--good); }
+.pill.road { color: var(--gold); border-color: var(--gold); }
+.pill.src { color: var(--gold-2); border-color: var(--gold-2); }
+.pill.wri { color: var(--bad); border-color: var(--bad); }
+.pill.obs { color: var(--good); border-color: var(--good); }
+
+/* code blocks: readable monospace, gold-tinted, inside a navy frame */
+pre.code {
+  background: #0a1325; border: 2px solid var(--gold); border-radius: 6px;
+  padding: 14px 16px; overflow: auto; margin: 8px 0;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.98rem; line-height: 1.5; color: var(--text-light);
+}
+pre.code .k { color: var(--gold); }
+pre.code .s { color: var(--gold-2); }
+pre.code .l { color: #a5d6ff; }
+pre.code .c { color: var(--muted); font-style: italic; }
+pre.code .f { color: var(--ghost); }
+
+/* media placeholders */
+.media {
+  flex: 1; min-height: 120px;
+  border: 3px dashed var(--gold); border-radius: 6px; background: var(--highlight-bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; color: var(--gold); gap: 8px; padding: 18px;
+}
+.media .ico { font-size: 2rem; letter-spacing: 3px; }
+.media .what { font-size: 1.4rem; color: var(--gold-2); }
+.media .hint { font-size: 1.05rem; color: var(--muted); max-width: 52ch; }
+
+/* fsm + flow diagrams */
+.fsm { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 14px 0; justify-content: center; }
+.node { border: 3px solid var(--muted); border-radius: 8px; padding: 10px 16px; background: var(--frame-bg); font-size: 1.3rem; text-align: center; color: var(--text-light); }
+.node.start { border-color: var(--gold); color: var(--gold); }
+.node.act { border-color: var(--gold-2); color: var(--gold-2); }
+.node.dead { border-color: var(--bad); color: var(--bad); }
+.arrow { color: var(--gold); font-size: 1.5rem; }
+
+.flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 12px; align-items: center; margin: 18px 0; }
+.flow .box { background: var(--frame-bg); border: 3px solid var(--gold); border-radius: 6px; padding: 16px; text-align: center; font-size: 1.4rem; color: var(--gold-2); }
+.flow .box.ghost { border-color: var(--ghost); color: var(--ghost); }
+.flow .sep { color: var(--gold); font-size: 1.8rem; text-align: center; }
+
+table.t { border-collapse: collapse; width: 100%; font-size: 1.2rem; }
+table.t th, table.t td { text-align: left; padding: 8px 12px; border-bottom: 2px solid rgba(255,204,0,0.25); }
+table.t th { color: var(--gold); text-transform: uppercase; font-size: 1rem; letter-spacing: 1.5px; }
+
+/* title + section slides */
+.titlecard { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; }
+.section-divider { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; height: 100%; }
+.section-divider .num { font-size: 7rem; color: var(--frame-bg); line-height: 1; -webkit-text-stroke: 2px var(--gold); }
+.foot { margin-top: auto; font-size: 1.15rem; color: var(--muted); }
+.demo-link {
+  display: inline-block; margin: 16px 0; border: 3px solid var(--gold); color: var(--gold);
+  padding: 10px 22px; border-radius: 6px; font-size: 1.5rem; letter-spacing: 1px; text-decoration: none;
+}
+.demo-link:hover { background: var(--gold); color: var(--bg-main); }
+
+/* nav chrome */
+.bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--gold); width: 0; box-shadow: 0 0 8px rgba(255,204,0,0.7); transition: width 0.3s; z-index: 10; }
+.counter { position: absolute; bottom: 14px; right: 52px; font-size: 0.95rem; color: var(--gold); letter-spacing: 1px; opacity: 0.7; z-index: 3; }
+.hintnav { position: fixed; bottom: 16px; left: 22px; font-size: 1.05rem; color: var(--muted); z-index: 10; letter-spacing: 1px; }
+.nav-zone { position: fixed; top: 0; width: 10vw; height: 100vh; z-index: 5; cursor: pointer; }
+.nav-zone.left { left: 0; }
+.nav-zone.right { right: 0; }
+
+/* laser pointer (tecla L para alternar, Escape para apagar) */
+.laser {
+  position: fixed; top: 0; left: 0; width: 18px; height: 18px;
+  margin: -9px 0 0 -9px; border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0%, #ff5a4d 28%, rgba(255,59,48,0.55) 60%, rgba(255,59,48,0) 75%);
+  box-shadow: 0 0 16px 6px rgba(255,59,48,0.75);
+  pointer-events: none; z-index: 9999; display: none;
+}
+.laser-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 9998; display: none; }
+body.laser-on { cursor: none; }
+body.laser-on .laser { display: block; }
+body.laser-on .laser-canvas { display: block; }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- 1 PORTADA -->
+  <section class="slide">
+    <div class="titlecard">
+      <div class="kicker">Plataformero 2D con bucle temporal</div>
+      <h1>Quantum Echoes</h1>
+      <p class="big muted">Escapar de la Fractura Cuantica cooperando con grabaciones de uno mismo.</p>
+      <a class="demo-link" href="https://tebansus.itch.io/quantum-echoes" target="_blank" rel="noopener">Demo jugable en el navegador: tebansus.itch.io/quantum-echoes</a>
+      <div class="foot">
+        Universidad de Costa Rica &nbsp;|&nbsp; PF-1900 Creacion de Videojuegos &nbsp;|&nbsp; Unity 6.3.11f1<br>
+        Esteban Alfaro &nbsp;&middot;&nbsp; David Martinez &nbsp;&middot;&nbsp; Antonio Badilla
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENDA -->
+  <section class="slide">
+    <span class="lead" data-by="Antonio">Agenda</span>
+    <h2>Que vamos a ver</h2>
+    <div class="cols">
+      <ol class="agenda">
+        <li><strong>Concepto</strong> y alcance del demo</li>
+        <li><strong>Arquitectura:</strong> como se construyo</li>
+        <li><strong>Un nivel completo:</strong> N1 El Eco</li>
+        <li><strong>Mecanicas</strong> del jugador</li>
+      </ol>
+      <ol class="agenda" start="5">
+        <li><strong>Enemigos</strong> y su algoritmo</li>
+        <li><strong>Deep dive:</strong> el sistema de Eco</li>
+        <li><strong>Cierre</strong> y preguntas</li>
+      </ol>
+    </div>
+    <div class="note">Exponen Esteban y David. Cualquiera de los dos puede responder sobre cualquier parte del sistema.</div>
+  </section>
+
+  <!-- 2 QUE ES -->
+  <section class="slide">
+    <span class="lead" data-by="Antonio">Concepto</span><span class="tag">1 / 7</span>
+    <h2>La idea en una linea</h2>
+    <p class="big">Un plataformero de precision donde cada intento queda grabado, y tu yo del pasado vuelve como fantasma para resolver lo que una sola persona no puede.</p>
+    <h3>El pilar de diseno</h3>
+    <p>Lo llamamos <strong>"ajedrez temporal"</strong>: cada run es una jugada estrategica. Decides que hacer, que guardar y que grabar, sabiendo que tu yo futuro va a aprovechar esas decisiones.</p>
+    <div class="note">Referencias: Metroidvania (Hollow Knight), feel de precision (Celeste), eco temporal (Super Time Force), bucle (Majora's Mask).</div>
+  </section>
+
+  <!-- 3 BUCLE -->
+  <section class="slide">
+    <span class="lead" data-by="Antonio">Concepto</span><span class="tag">1 / 7</span>
+    <h2>El bucle temporal</h2>
+    <div class="cols">
+      <div>
+        <ul>
+          <li>Cada nivel tiene un <strong>temporizador</strong>. Cuando se acaba, el run termina.</li>
+          <li>El run tambien termina al perder los 3 corazones o de forma voluntaria.</li>
+          <li>Al terminar, decides si <strong>grabar</strong> ese run como tu nuevo fantasma.</li>
+          <li>Nuevo run: el mundo se reinicia, los enemigos vuelven frescos, pero la <strong>caja temporal</strong> persiste y el fantasma reproduce el run grabado.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Core loop</h4>
+        <p>Empieza run, el fantasma reproduce su grabacion, navegas, recoges e interactuas, guardas en la caja temporal, el run termina, grabas o no, y repites hasta completar el nivel.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 ALCANCE -->
+  <section class="slide">
+    <span class="lead" data-by="Antonio">Concepto</span><span class="tag">1 / 7</span>
+    <h2>Alcance: 9 niveles, lo de hoy</h2>
+    <div class="cols-3">
+      <div class="card">
+        <h4>Zona A: Ruinas Medievales</h4>
+        <p>Niveles 1 a 3. <span class="pill demo">Demo de hoy</span><br><br>N1 El Eco (tutorial), N2 Las Criptas (Dash + caja), N3 La Torre (Wall Grip + Caballero).</p>
+      </div>
+      <div class="card">
+        <h4>Zona B: Oeste Industrial</h4>
+        <p>Niveles 4 a 6. <span class="pill road">Roadmap</span><br><br>Double Jump, Time Freeze, Pocket, jefe Sheriff.</p>
+      </div>
+      <div class="card">
+        <h4>Zona C: Brecha Cibernetica</h4>
+        <p>Niveles 7 a 9. <span class="pill road">Roadmap</span><br><br>Grapple Hook, lasers, jefe final Super Ghost.</p>
+      </div>
+    </div>
+    <div class="note">Honestidad de alcance: hoy mostramos la Zona A con stub art. El resto es diseno documentado en el GDD, no codigo terminado.</div>
+  </section>
+
+  <!-- 5 SECCION ARQUITECTURA -->
+  <section class="slide">
+    <div class="section-divider">
+      <div class="num">02</div>
+      <h1 style="text-align:left">Como se construyo</h1>
+      <p class="muted big">Arquitectura por composicion.</p>
+    </div>
+  </section>
+
+  <!-- 6 STACK -->
+  <section class="slide">
+    <span class="lead" data-by="Antonio">Arquitectura</span><span class="tag">2 / 7</span>
+    <h2>El stack y las decisiones de base</h2>
+    <div class="cols-3">
+      <div class="card"><h4>Unity 6.3.11f1</h4><p>Motor 2D, fisica Rigidbody2D, Tilemaps.</p></div>
+      <div class="card"><h4>New Input System</h4><p>Handlers por callback, sin polling. El input emite eventos, los componentes se suscriben.</p></div>
+      <div class="card"><h4>GameManager</h4><p>Coordinador central. Singleton que orquesta el ciclo de run y guarda la grabacion.</p></div>
+    </div>
+    <h3>No hay un PlayerController monolitico</h3>
+    <p>El jugador es un prefab compuesto de varios MonoBehaviour, cada uno con una sola responsabilidad. Anadir una habilidad es siempre la misma operacion: un componente que se cuelga del prefab.</p>
+  </section>
+
+  <!-- 7 COMPOSICION -->
+  <section class="slide">
+    <span class="lead" data-by="Antonio">Arquitectura</span><span class="tag">2 / 7</span>
+    <h2>Tres roles: Source, Writer, Observer</h2>
+    <div class="cols-3">
+      <div class="card"><h4><span class="pill src">Source</span></h4><p>Produce informacion, no cambia el mundo.<br><br>PlayerInputSource, GroundCheck</p></div>
+      <div class="card"><h4><span class="pill wri">Writer</span></h4><p>Cambia el estado del mundo (Rigidbody, eventos).<br><br>HorizontalMovement (eje x), JumpAbility (eje y)</p></div>
+      <div class="card"><h4><span class="pill obs">Observer</span></h4><p>Lee y reacciona, no cambia estado.<br><br>Loggers, audio, VFX</p></div>
+    </div>
+    <h3>Reglas que evitan dolor</h3>
+    <ul>
+      <li><strong>Un Writer por eje y por tick.</strong> Si dos quieren el mismo eje, se decide quien manda por gating.</li>
+      <li><strong>Suscribir en OnEnable, desuscribir en OnDisable.</strong> Espejo exacto, sin handlers fantasma.</li>
+      <li><strong>Logica de algoritmo en helpers puros de C#</strong> (sin Unity), probados en EditMode.</li>
+    </ul>
+  </section>
+
+  <!-- 8 SECCION N1 -->
+  <section class="slide">
+    <div class="section-divider">
+      <div class="num">03</div>
+      <h1 style="text-align:left">Un nivel completo</h1>
+      <p class="muted big">Nivel 1: El Eco.</p>
+    </div>
+  </section>
+
+  <!-- 9 N1 OVERVIEW -->
+  <section class="slide">
+    <span class="lead" data-by="David">Nivel completo</span><span class="tag">3 / 7</span>
+    <h2>Nivel 1: El Eco</h2>
+    <div class="cols">
+      <div>
+        <p>El nivel tutorial. El jugador despierta en una camara de piedra medieval. El objetivo: llegar a la salida, detras de una puerta en una plataforma elevada a la derecha.</p>
+        <h3>Que ensena</h3>
+        <ul>
+          <li>Desplazamiento basico: caminar y saltar.</li>
+          <li>La placa de presion que abre una puerta.</li>
+          <li>El trigger de salida que termina el run con exito.</li>
+          <li>Prompts de tutorial contextuales.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Por que N1 para la demo</h4>
+        <p>Es el nivel mas completo de extremo a extremo: piso, props, placa + puerta, salida y tutorial estan integrados y jugables.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 N1 VIDEO -->
+  <section class="slide">
+    <span class="lead" data-by="David">Nivel completo</span><span class="tag">3 / 7</span>
+    <h2>Recorrido completo</h2>
+    <div class="media" data-media="n1-recorrido.mp4" data-kind="video">
+      <div class="ico">[ VIDEO ]</div>
+      <div class="what">Guardar n1-recorrido.mp4 en esta carpeta</div>
+      <div class="hint">Recorrido completo de N1 (spawn, placa, puerta, ascenso, salida). 60 a 90 segundos. Aparece aqui al guardar el archivo y refrescar.</div>
+    </div>
+  </section>
+
+  <!-- SECCION JUGADOR -->
+  <section class="slide">
+    <div class="section-divider">
+      <div class="num">04</div>
+      <h1 style="text-align:left">Mecanicas del jugador</h1>
+      <p class="muted big">Movimiento, salto, y la mas compleja.</p>
+    </div>
+  </section>
+
+  <!-- 13 ABILITIES -->
+  <section class="slide">
+    <span class="lead" data-by="David y Antonio">Jugador</span><span class="tag">4 / 7</span>
+    <h2>Habilidades del jugador</h2>
+    <table class="t">
+      <tr><th>Habilidad</th><th>Que hace</th><th>Estado</th></tr>
+      <tr><td>Caminar / Saltar</td><td>Movimiento base con feel ajustado</td><td><span class="pill demo">En demo</span></td></tr>
+      <tr><td>Atacar</td><td>Golpe de espada (windup, activo, recovery)</td><td><span class="pill demo">En demo</span></td></tr>
+      <tr><td>Dash</td><td>Desplazamiento rapido, 1 vez por airtime</td><td><span class="pill demo">En demo</span></td></tr>
+      <tr><td>Wall Grip</td><td>Agarre a pared 1s + wall jump</td><td><span class="pill demo">En demo</span></td></tr>
+      <tr><td>Reencarnacion</td><td>Swap de posicion con el fantasma</td><td><span class="pill demo">En demo</span></td></tr>
+      <tr><td>Double Jump / Time Freeze / Pocket / Grapple</td><td>Habilidades de Zonas B y C</td><td><span class="pill road">Roadmap</span></td></tr>
+    </table>
+  </section>
+
+  <!-- 14 GAME FEEL -->
+  <section class="slide">
+    <span class="lead" data-by="David y Antonio">Jugador</span><span class="tag">4 / 7</span>
+    <h2>Game feel: los tres clasicos del salto</h2>
+    <div class="cols">
+      <div>
+        <h3>Coyote time</h3>
+        <p class="muted">Permite saltar un instante despues de salir de la plataforma. Perdona el frame perdido.</p>
+        <h3>Jump buffer</h3>
+        <p class="muted">Si presionas salto justo antes de aterrizar, se guarda y salta al tocar el suelo.</p>
+        <h3>Salto variable</h3>
+        <p class="muted">Mantener el boton sostiene la altura un poco mas. Tap corto, hold largo.</p>
+      </div>
+      <div>
+        <pre class="code"><span class="c">// helper puro de C#, sin Unity, probado en EditMode</span>
+<span class="k">public class</span> <span class="s">CoyoteTimer</span> {
+    <span class="k">public void</span> Refresh() { remaining = window; }
+    <span class="k">public void</span> Tick(<span class="k">float</span> dt) { remaining -= dt; }
+    <span class="k">public bool</span> CanJump =&gt; remaining &gt; <span class="l">0f</span>;
+}</pre>
+        <div class="note">Reciben <code>dt</code> por parametro, asi no dependen de <code>Time.fixedDeltaTime</code> y se prueban mucho mas rapido.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 WALL GRIP -->
+  <section class="slide">
+    <span class="lead" data-by="David y Antonio">Jugador</span><span class="tag">4 / 7</span>
+    <h2>Wall Grip: la mas compleja del jugador</h2>
+    <div class="cols">
+      <div>
+        <ul>
+          <li>Se agarra si estas en el aire, hay pared al lado, y empujas <strong>hacia</strong> la pared (deteccion por OverlapBox).</li>
+          <li>Sostiene 1 segundo, o sueltas antes empujando al lado contrario.</li>
+          <li>Salto durante el agarre dispara el <strong>wall jump</strong>: impulso hacia afuera y arriba.</li>
+          <li>El wall jump resetea el uso, asi se encadenan saltos entre paredes.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="note">La sutileza: tras el wall jump hay un <strong>lockout de input de ~150ms</strong>. Sin el, HorizontalMovement corrige el impulso al instante y el arco se siente plano.</div>
+        <pre class="code"><span class="k">if</span> (dash.IsDashing) <span class="k">return</span>;
+<span class="k">if</span> (wallGrip.IsGripping) <span class="k">return</span>;
+<span class="k">if</span> (wallGrip.IsInWallJumpLock) <span class="k">return</span>;
+<span class="c">// HorizontalMovement cede el eje x</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 SECCION ENEMIGOS -->
+  <section class="slide">
+    <div class="section-divider">
+      <div class="num">05</div>
+      <h1 style="text-align:left">Enemigos y su algoritmo</h1>
+      <p class="muted big">Una maquina de estados finita.</p>
+    </div>
+  </section>
+
+  <!-- 17 FSM -->
+  <section class="slide">
+    <span class="lead" data-by="Antonio">Enemigos</span><span class="tag">5 / 7</span>
+    <h2>El algoritmo: una FSM, no pathfinding</h2>
+    <p>Cada enemigo es una <strong>maquina de estados finita</strong>. En cada frame, segun el estado actual, se ejecuta el tick correspondiente.</p>
+    <div class="fsm">
+      <div class="node start">Patrol</div><span class="arrow">&rarr;</span>
+      <div class="node act">Alert</div><span class="arrow">&rarr;</span>
+      <div class="node act">Chase</div><span class="arrow">&rarr;</span>
+      <div class="node act">Attack</div><span class="arrow">&rarr;</span>
+      <div class="node act">Hit</div><span class="arrow">&rarr;</span>
+      <div class="node dead">Dead</div>
+    </div>
+    <pre class="code"><span class="k">switch</span> (State) {
+    <span class="k">case</span> <span class="s">EnemyState</span>.Patrol: TickPatrol(dt); <span class="k">break</span>;
+    <span class="k">case</span> <span class="s">EnemyState</span>.Chase:  TickChase(dt);  <span class="k">break</span>;
+    <span class="k">case</span> <span class="s">EnemyState</span>.Attack: TickAttack(dt); <span class="k">break</span>;
+    <span class="c">// Alert, Hit, Dead...</span>
+}</pre>
+  </section>
+
+  <!-- 18 DETECCION -->
+  <section class="slide">
+    <span class="lead" data-by="Antonio">Enemigos</span><span class="tag">5 / 7</span>
+    <h2>Deteccion y dano</h2>
+    <div class="cols">
+      <div>
+        <h3>Deteccion por rango</h3>
+        <ul>
+          <li><code>detectionRange</code>: dentro de el, Patrol pasa a Alert y luego Chase.</li>
+          <li><code>attackRange</code>: dentro de el, Chase pasa a Attack.</li>
+          <li>Calculo simple de distancia al objetivo cada frame.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Pipeline de dano</h3>
+        <ul>
+          <li><code>IDamageable</code>: interfaz comun para todo lo que recibe golpes.</li>
+          <li>Al recibir dano: resta vida, entra a Hit (stun), aplica knockback direccional.</li>
+          <li>A 0 de vida: pasa a Dead.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note">Regla del GDD: los enemigos respawnean frescos cada run. El eco nunca altera el estado de los enemigos entre runs.</div>
+  </section>
+
+  <!-- 19 BOSS -->
+  <section class="slide">
+    <span class="lead" data-by="Antonio">Enemigos</span><span class="tag">5 / 7</span>
+    <h2>El Caballero Oscuro: escudo direccional</h2>
+    <div class="cols">
+      <div>
+        <p>Hereda de la misma base (<code>BossBase : EnemyBase</code>) pero anade dos mecanicas:</p>
+        <ul>
+          <li><strong>Escudo frontal:</strong> bloquea ataques del lado que el jefe encara. El facing se calcula <strong>en vivo</strong>, asi sobrevive a teleports.</li>
+          <li><strong>Dano por contacto:</strong> tocar el cuerpo cuesta vida (estilo Hollow Knight).</li>
+        </ul>
+        <pre class="code"><span class="k">bool</span> ShouldBlockDamage(<span class="s">Vector2</span> src) {
+    <span class="k">float</span> dx = src.x - position.x;
+    <span class="k">return</span> <span class="s">Mathf</span>.Sign(dx) == ComputeFacing();
+}</pre>
+      </div>
+      <div class="card">
+        <h4>La estrategia invertida</h4>
+        <p>No le puedes pegar de frente. La solucion: tu haces de cebo manteniendote al frente, mientras tu <strong>fantasma lo golpea por la espalda</strong>. El jefe ignora al fantasma.<br><br>Aqui el eco deja de ser una herramienta de puzzle y se vuelve una de combate.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 SECCION DEEP DIVE -->
+  <section class="slide">
+    <div class="section-divider">
+      <div class="num">06</div>
+      <h1 style="text-align:left">El sistema de Eco</h1>
+      <p class="muted big">La mecanica mas compleja, a fondo.</p>
+    </div>
+  </section>
+
+  <!-- 21 ECO QUE ES -->
+  <section class="slide">
+    <span class="lead" data-by="Esteban">Deep dive: Eco</span><span class="tag">6 / 7</span>
+    <h2>El corazon del juego</h2>
+    <p class="quote">"En el siguiente run, un fantasma replica esa grabacion exacta."</p>
+    <p>El jugador graba un run. En el siguiente, un fantasma reproduce ese run: movimiento, interacciones con el mundo y ataques. Sus interacciones afectan el mundo en tiempo real.</p>
+    <ul>
+      <li>Maximo un fantasma activo a la vez.</li>
+      <li>El fantasma es invulnerable.</li>
+      <li>Sus ataques impactan enemigos solo si coinciden en posicion y tiempo.</li>
+    </ul>
+  </section>
+
+  <!-- 22 GRABACION -->
+  <section class="slide">
+    <span class="lead" data-by="Esteban">Deep dive: Eco</span><span class="tag">6 / 7</span>
+    <h2>Paso 1: grabacion</h2>
+    <div class="cols">
+      <div>
+        <p>Cada <code>FixedUpdate</code>, el <code>PlayerRecorder</code> guarda un <strong>snapshot</strong> del estado del jugador.</p>
+        <pre class="code"><span class="k">new</span> <span class="s">PlayerSnapshot</span> {
+    position, velocity,
+    moveInput, jumpHeld,
+    jumpStarted, attackStarted,
+};</pre>
+        <div class="note">Por que <code>FixedUpdate</code>: ahi corre la fisica. Grabar al mismo ritmo garantiza que el fantasma se reproduzca igual en cualquier maquina.</div>
+      </div>
+      <div>
+        <h3>El detalle dificil</h3>
+        <p>Los eventos de <strong>un solo frame</strong> (un ataque, un salto) se marcan y se limpian cada tick. Tienen que sobrevivir el viaje completo: evento, captura en el snapshot, almacenamiento, reproduccion, y dispararse <strong>exactamente una vez</strong>.</p>
+        <pre class="code"><span class="k">void</span> NotifyAttackStarted() =&gt;
+    attackStartedThisFrame = <span class="l">true</span>;
+<span class="c">// se captura en el proximo snapshot</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 23 PLAYBACK -->
+  <section class="slide">
+    <span class="lead" data-by="Esteban">Deep dive: Eco</span><span class="tag">6 / 7</span>
+    <h2>Paso 2: reproduccion</h2>
+    <div class="cols">
+      <div>
+        <p>El fantasma usa un Rigidbody2D <strong>Kinematic</strong>: no simula fisica, escribe la posicion y velocidad grabadas directamente.</p>
+        <pre class="code"><span class="s">PlayerSnapshot</span> snap = buffer[frameIndex];
+body.position = snap.position;
+body.linearVelocity = snap.velocity;
+<span class="k">if</span> (snap.attackStarted)
+    attack.TryAttack(facing);
+frameIndex++;</pre>
+      </div>
+      <div>
+        <div class="note"><strong>Punto fino para preguntas:</strong> no re-simulamos los inputs, reproducimos el <strong>estado grabado</strong>. Asi esquivamos cualquier divergencia de fisica entre maquinas o runs. Es replay de estado, no re-simulacion.</div>
+        <p style="margin-top:14px">Al acabarse el buffer, el fantasma frena y avisa al spawner para destruirse, una sola vez.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 24 CICLO -->
+  <section class="slide">
+    <span class="lead" data-by="Esteban">Deep dive: Eco</span><span class="tag">6 / 7</span>
+    <h2>Paso 3: el ciclo run N a fantasma N+1</h2>
+    <div class="flow">
+      <div class="box">Run N<br><span class="muted" style="font-size:1rem">PlayerRecorder graba snapshots</span></div>
+      <div class="sep">&rarr;</div>
+      <div class="box">Fin del run<br><span class="muted" style="font-size:1rem">GameManager guarda la grabacion</span></div>
+      <div class="sep">&rarr;</div>
+      <div class="box ghost">Run N+1<br><span class="muted" style="font-size:1rem">GhostSpawner instancia y reproduce</span></div>
+    </div>
+    <p>El <code>GameManager</code> es el coordinador: emite <code>OnRunStart</code> y <code>OnRunEnd</code>, guarda el arreglo de snapshots del run que termino, y en el siguiente run el spawner crea el fantasma con esa grabacion.</p>
+    <div class="note">Tres piezas, una responsabilidad cada una: el recorder graba, el GameManager guarda, el spawner reproduce.</div>
+  </section>
+
+  <!-- 25 REINCARNACION -->
+  <section class="slide">
+    <span class="lead" data-by="Esteban">Deep dive: Eco</span><span class="tag">6 / 7</span>
+    <h2>El giro: reencarnacion y el orden de ejecucion</h2>
+    <div class="cols">
+      <div>
+        <p>La reencarnacion intercambia tu posicion con la del fantasma, y lo consume. En el siguiente run, la grabacion <strong>incluye</strong> ese teletransporte.</p>
+        <p>Para eso, el swap se hace <strong>dentro del callback del Input</strong>, que corre en <code>Update</code>, no en <code>FixedUpdate</code>.</p>
+      </div>
+      <div>
+        <div class="note">Si escribieramos la posicion en <code>FixedUpdate</code>, Unity no garantiza el orden entre scripts. Si el recorder corre primero, ese snapshot llevaria la posicion vieja y la grabacion se rompe por un frame. El callback de Input siempre corre antes del proximo FixedUpdate del recorder.</div>
+        <p class="muted" style="margin-top:12px">Es el problema inverso al recorder: una mecanica elige FixedUpdate a proposito, la otra elige Update a proposito, ambas por el orden de ejecucion.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 26 EL PAGO -->
+  <section class="slide">
+    <span class="lead" data-by="Esteban">Deep dive: Eco</span><span class="tag">6 / 7</span>
+    <h2>Por que vale la pena: todo se junta</h2>
+    <div class="cols">
+      <div>
+        <p>El sistema de eco no es una curiosidad tecnica: es lo que hace posible la pelea del Caballero.</p>
+        <ul>
+          <li>Run 1: grabas un recorrido que ataca donde estara el jefe.</li>
+          <li>Run 2: tu fantasma reproduce esos ataques por la espalda, mientras tu haces de cebo de frente.</li>
+          <li>El escudo frontal mas el dano por contacto fuerzan esa cooperacion.</li>
+        </ul>
+      </div>
+      <div class="media" data-media="caballero.mp4" data-kind="video"><div class="ico">[ VIDEO ]</div><div class="what">caballero.mp4</div><div class="hint">Jugador de frente como cebo, fantasma golpeando por la espalda.</div></div>
+    </div>
+  </section>
+
+  <!-- 27 CIERRE -->
+  <section class="slide">
+    <span class="lead" data-by="Esteban">Cierre</span><span class="tag">7 / 7</span>
+    <h2>Propuesta de valor y que sigue</h2>
+    <div class="cols">
+      <div>
+        <h3>Propuesta de valor</h3>
+        <p>Plataformas de precision + bucle temporal + eco cooperativo-en-solitario, una interseccion poco explorada. El "ajedrez temporal" da profundidad rejugable; la amalgama historica (16-bit, colision de eras) da identidad visual.</p>
+      </div>
+      <div>
+        <h3>Roadmap honesto</h3>
+        <ul>
+          <li>Zonas B y C: Double Jump, Time Freeze, Pocket, Grapple.</li>
+          <li>Jefes Sheriff y Super Ghost.</li>
+          <li>Arte final sobre los stubs actuales.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note">Hoy demostramos la Zona A jugable con las mecanicas core: movimiento, combate, enemigos con FSM, jefe con escudo, y el sistema de eco completo.</div>
+    <div style="text-align:center;margin-top:14px">
+      <a class="demo-link" href="https://tebansus.itch.io/quantum-echoes" target="_blank" rel="noopener">Jugala vos: tebansus.itch.io/quantum-echoes</a>
+    </div>
+  </section>
+
+  <!-- PREGUNTAS -->
+  <section class="slide">
+    <div class="titlecard">
+      <div class="kicker">Gracias</div>
+      <h1>Preguntas</h1>
+      <p class="big muted">Cualquier integrante puede responder sobre cualquier parte del sistema.</p>
+      <div class="foot">Quantum Echoes &middot; PF-1900 UCR &middot; Esteban, David, Antonio</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="bar" id="bar"></div>
+<div class="counter" id="counter">1</div>
+<div class="nav-zone left" id="navLeft"></div>
+<div class="nav-zone right" id="navRight"></div>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var i = 0;
+  var bar = document.getElementById("bar");
+  var counter = document.getElementById("counter");
+
+  // Escala el canvas fijo (1280x720) para llenar la ventana sin reflujo.
+  // Reacciona a resize y a zoom (visualViewport), asi se ve igual en
+  // cualquier pantalla, proyector o nivel de zoom.
+  function fit() {
+    var s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+    document.documentElement.style.setProperty("--scale", s);
+  }
+  window.addEventListener("resize", fit);
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", fit);
+  fit();
+
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, idx) { s.classList.toggle("active", idx === i); });
+    // Move the counter into the active slide so it lives in the dark interior
+    // and scales with the slide, instead of overlapping the gold frame.
+    slides[i].appendChild(counter);
+    bar.style.width = ((i + 1) / slides.length * 100) + "%";
+    counter.textContent = (i + 1) + " / " + slides.length;
+    if (location.hash !== "#" + (i + 1)) history.replaceState(null, "", "#" + (i + 1));
+  }
+  function next() { show(i + 1); }
+  function prev() { show(i - 1); }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { next(); e.preventDefault(); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { prev(); e.preventDefault(); }
+    else if (e.key === "Home") { show(0); }
+    else if (e.key === "End") { show(slides.length - 1); }
+    else if (e.key === "l" || e.key === "L") { document.body.classList.toggle("laser-on"); }
+    else if (e.key === "Escape") { document.body.classList.remove("laser-on"); }
+  });
+
+  // Laser pointer: punto rojo que sigue el mouse cuando esta activo (tecla L),
+  // con una estela roja que se desvanece (~0.9s) para marcar o subrayar.
+  var laser = document.createElement("div");
+  laser.className = "laser";
+  document.body.appendChild(laser);
+
+  var canvas = document.createElement("canvas");
+  canvas.className = "laser-canvas";
+  document.body.appendChild(canvas);
+  var ctx = canvas.getContext("2d");
+  function sizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  sizeCanvas();
+  window.addEventListener("resize", sizeCanvas);
+
+  var trail = [];
+  var FADE = 900;
+
+  document.addEventListener("mousemove", function (e) {
+    laser.style.left = e.clientX + "px";
+    laser.style.top = e.clientY + "px";
+    if (document.body.classList.contains("laser-on"))
+      trail.push({ x: e.clientX, y: e.clientY, t: performance.now() });
+  });
+
+  function drawTrail() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var now = performance.now();
+    while (trail.length && now - trail[0].t > FADE) trail.shift();
+    if (document.body.classList.contains("laser-on") && trail.length > 1) {
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.shadowColor = "rgba(255,59,48,0.8)";
+      ctx.shadowBlur = 8;
+      for (var k = 1; k < trail.length; k++) {
+        var a = 1 - (now - trail[k].t) / FADE;
+        if (a <= 0) continue;
+        ctx.strokeStyle = "rgba(255,59,48," + a.toFixed(3) + ")";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(trail[k - 1].x, trail[k - 1].y);
+        ctx.lineTo(trail[k].x, trail[k].y);
+        ctx.stroke();
+      }
+    }
+    requestAnimationFrame(drawTrail);
+  }
+  requestAnimationFrame(drawTrail);
+  document.getElementById("navRight").addEventListener("click", next);
+  document.getElementById("navLeft").addEventListener("click", prev);
+  window.addEventListener("hashchange", function () {
+    var n = parseInt((location.hash || "#1").slice(1), 10);
+    if (!isNaN(n) && n - 1 !== i) show(n - 1);
+  });
+
+  var start = parseInt((location.hash || "#1").slice(1), 10);
+  show(isNaN(start) ? 0 : start - 1);
+
+  // Credito de trabajo, como nota al pie discreta en cada slide de contenido.
+  Array.prototype.forEach.call(document.querySelectorAll(".lead[data-by]"), function (lead) {
+    var c = document.createElement("div");
+    c.className = "credit";
+    c.textContent = "Trabajo de " + lead.getAttribute("data-by");
+    lead.parentNode.appendChild(c);
+  });
+
+  // Carga el video o las capturas si el archivo existe en esta carpeta.
+  // Si no esta, se queda el placeholder con el nombre del archivo a guardar.
+  // (Agregar ?novideo a la URL para previsualizar sin cargar los videos.)
+  if (location.search.indexOf("novideo") === -1)
+  Array.prototype.forEach.call(document.querySelectorAll("[data-media]"), function (box) {
+    var src = box.getAttribute("data-media");
+    var kind = box.getAttribute("data-kind");
+    function mount(el) {
+      el.style.maxWidth = "100%"; el.style.maxHeight = "100%"; el.style.objectFit = "contain";
+      el.style.borderRadius = "10px";
+      box.innerHTML = ""; box.style.borderStyle = "solid"; box.style.overflow = "hidden"; box.appendChild(el);
+    }
+    if (kind === "img") {
+      var img = new Image();
+      img.onload = function () { mount(img); };
+      img.src = src;
+    } else if (kind === "video") {
+      var v = document.createElement("video");
+      v.controls = true;
+      v.addEventListener("loadeddata", function () { mount(v); });
+      v.src = src;
+    }
+  });
+})();
+</script>
+</body>
+</html>
